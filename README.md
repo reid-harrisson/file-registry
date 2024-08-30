@@ -22,6 +22,29 @@
         - Argument: filePath as queryString
         - Get the data from the File Registry and return the CID to the client.
 
+## Run on local environment
+1. Install go.
+
+2. Download required packages.
+    ``` bash
+    go mod download
+    ```
+3. Install swagger.
+    ``` bash
+    go install github.com/swaggo/swag/cmd/swag@latest
+    ```
+4. Generate swagger documentation.
+    ``` bash
+    swag init -g cmd/main.go
+    ```
+5. Copy `.env.example` and rename it to `.env`.
+
+6. Run application.
+    ``` bash
+    go run ./cmd
+    ```
+7. You can see swagger documentation at <http://localhost:8000/docs/index.html>.
+
 ## Guidelines
 
 1. We are interested in your code management and development skills, so please solve the problem keeping that in mind.
