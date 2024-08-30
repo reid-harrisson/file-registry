@@ -1,8 +1,8 @@
 package server
 
 import (
+	"file-registory/config"
 	_ "file-registory/docs"
-	"file-registory/pkgs/config"
 
 	"github.com/gofiber/fiber/v2"
 )

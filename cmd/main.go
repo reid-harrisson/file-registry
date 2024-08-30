@@ -1,7 +1,7 @@
 package main
 
 import (
-	cfg "file-registory/pkgs/config"
+	cfg "file-registory/config"
 	s "file-registory/server"
 	"file-registory/server/routes"
 	"log"
