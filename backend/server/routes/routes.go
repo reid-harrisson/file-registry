@@ -11,9 +11,9 @@ import (
 func ConfigureRoutes(server *s.Server) {
 	server.App.Get("/docs/*", swagger.WrapHandler)
 
-	apiV1 := server.App.Group("/api/v1")
+	v1 := server.App.Group("/v1")
 
-	groupFiles := apiV1.Group("/files")
+	groupFiles := v1.Group("/files")
 	GroupFiles(server, groupFiles)
 
 }
