@@ -45,6 +45,10 @@
     ```
 7. You can see swagger documentation at <http://localhost:8000/docs/index.html>.
 
+solc --abi contracts/FileRegistry.sol -o contracts
+
+
+
 ## Guidelines
 
 1. We are interested in your code management and development skills, so please solve the problem keeping that in mind.

@@ -15,11 +15,14 @@ func main() {
 
 	err := config.LoadEnvironment()
 	if err != nil {
-		log.Println("Failed to load environment variables!")
-		log.Println("Server port is set to default(8000).")
+		log.Fatalf("Failed to load environment variables!")
 	}
 
-	server := s.NewServer(config)
+	server, err := s.NewServer(config)
+
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	routes.ConfigureRoutes(server)
 	server.Listen()

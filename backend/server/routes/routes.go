@@ -22,5 +22,5 @@ func GroupFiles(server *s.Server, router fiber.Router) {
 	handler := handlers.NewHandlerFiles(server)
 
 	router.Get("", handler.GetFile)
-	router.Post("", handler.GetFile)
+	router.Post("", handler.SaveFile)
 }

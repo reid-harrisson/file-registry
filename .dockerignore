@@ -1,0 +1,4 @@
+.env
+backend/docs
+smart_contract/node_modules
+smart_contract/build
