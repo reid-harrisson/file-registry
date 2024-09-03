@@ -5,4 +5,4 @@ docker-build:
 	docker build -t file-registry .
 
 docker-run:
-	docker run -p 9000:8000 myfunction
+	docker run -p 9000:8000 file-registry

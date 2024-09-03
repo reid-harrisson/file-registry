@@ -47,7 +47,7 @@
 
 solc --abi contracts/FileRegistry.sol -o contracts
 
-
+abigen --abi contracts/FileRegistry.abi --pkg main --type Storage --out contracts/FileRegistory.go
 
 ## Guidelines
 

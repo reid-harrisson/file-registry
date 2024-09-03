@@ -3,6 +3,7 @@ package handlers
 import (
 	"file-registory/responses"
 	s "file-registory/server"
+	"fmt"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -47,6 +48,8 @@ func (h *HandlerFiles) SaveFile(c *fiber.Ctx) error {
 	if err != nil {
 		return responses.ErrorResponse(c, fiber.StatusBadRequest, "Failed to upload file.")
 	}
+
+	fmt.Println(cid)
 
 	err = h.Server.Contract.Save(filePath, cid)
 	if err != nil {

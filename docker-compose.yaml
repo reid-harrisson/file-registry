@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  ganache:
+    image: trufflesuite/ganache-cli
+    ports:
+      - 8545:8545
+    networks:
+      - ganache-network
+    command: --host 0.0.0.0 --port 8545 --networkId 5777 --accounts 10 --defaultBalanceEther 1000
+
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 8000:8000
+    environment:
+      - GANACHE_URL=http://ganache:8545
+    depends_on:
+      - ganache
+    command: ["sh", "-c", "truffle migrate --network development"]
+
+networks:
+  ganache-network:
+    driver: bridge

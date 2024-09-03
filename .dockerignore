@@ -1,4 +1,6 @@
-.env
-backend/docs
-smart_contract/node_modules
-smart_contract/build
+.env.example
+docs
+docker-compose.yaml
+Dockerfile
+Makefile
+README.md

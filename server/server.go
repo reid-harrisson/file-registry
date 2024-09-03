@@ -24,6 +24,11 @@ func NewServer(config *config.Config) (*Server, error) {
 		return nil, err
 	}
 
+	err = contract.Deploy()
+	if err != nil {
+		return nil, err
+	}
+
 	sh := shell.NewShell(config.IpfsUrl)
 
 	return &Server{

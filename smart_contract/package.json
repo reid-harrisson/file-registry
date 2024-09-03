@@ -1,9 +1,0 @@
-{
-  "devDependencies": {
-    "ganache-cli": "^6.12.2",
-    "truffle": "^5.11.5"
-  },
-  "dependencies": {
-    "solc": "^0.8.26"
-  }
-}
