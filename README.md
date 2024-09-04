@@ -48,7 +48,9 @@
     ```bash
     docker compose down
     ```
+5. You can see swagger documentation at this url.
 
+    <http://127.0.0.1:8000/docs/index.html>
 
 ## Guidelines
 
