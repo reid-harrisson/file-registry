@@ -1,26 +1,32 @@
 version: "3.8"
 
 services:
-  ganache:
-    image: trufflesuite/ganache-cli
-    ports:
-      - 8545:8545
-    networks:
-      - ganache-network
-    command: --host 0.0.0.0 --port 8545 --networkId 5777 --accounts 10 --defaultBalanceEther 1000
-
   app:
     build:
       context: .
-      dockerfile: ./Dockerfile
+      dockerfile: Dockerfile
     ports:
-      - 8000:8000
+      - "8000:8000"
     environment:
-      - GANACHE_URL=http://ganache:8545
+      IPFS_URL: http://ipfs:5001
     depends_on:
-      - ganache
-    command: ["sh", "-c", "truffle migrate --network development"]
+      ipfs:
+        condition: service_healthy
 
-networks:
-  ganache-network:
-    driver: bridge
+  ipfs:
+    image: ipfs/go-ipfs
+    ports:
+      - "5001:5001"
+      - "8080:8080"
+    environment:
+      IPFS_PROFILE: "server"
+    volumes:
+      - ipfs_data:/data/ipfs
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5001"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  ipfs_data:

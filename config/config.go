@@ -7,11 +7,11 @@ import (
 )
 
 type Config struct {
-	ServerPort   string
-	IpfsUrl      string
-	RpcSrvUrl    string
-	PrivateKey   string
-	ContractAddr string
+	ServerPort      string
+	IpfsUrl         string
+	SepoliaUrl      string
+	PrivateKey      string
+	ContractAddress string
 }
 
 func NewConfig() *Config {
@@ -28,9 +28,9 @@ func (config *Config) LoadEnvironment() error {
 
 	config.ServerPort = os.Getenv("SERVER_PORT")
 	config.IpfsUrl = os.Getenv("IPFS_URL")
-	config.RpcSrvUrl = os.Getenv("RPC_SRV_URL")
+	config.SepoliaUrl = os.Getenv("SEPOLIA_URL")
 	config.PrivateKey = os.Getenv("PRIVATE_KEY")
-	config.ContractAddr = os.Getenv("CONTRACT_ADDR")
+	config.ContractAddress = os.Getenv("CONTRACT_ADDRESS")
 
 	return nil
 }

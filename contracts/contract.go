@@ -4,7 +4,7 @@ import (
 	"context"
 	"crypto/ecdsa"
 	cfg "file-registory/config"
-	"file-registory/contracts/store"
+	freg "file-registory/contracts/file_registry"
 	"fmt"
 	"math/big"
 
@@ -15,14 +15,12 @@ import (
 )
 
 type Contract struct {
-	Instance    *store.Store
-	Client      *ethclient.Client
-	PrivateKey  *ecdsa.PrivateKey
-	FromAddress common.Address
+	Instance *freg.FileRegistry
+	Auth     *bind.TransactOpts
 }
 
 func NewContract(config *cfg.Config) (*Contract, error) {
-	client, err := ethclient.Dial(config.RpcSrvUrl)
+	client, err := ethclient.Dial(config.SepoliaUrl)
 	if err != nil {
 		return nil, err
 	}
@@ -39,73 +37,39 @@ func NewContract(config *cfg.Config) (*Contract, error) {
 	}
 
 	fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
+	nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
+	if err != nil {
+		return nil, err
+	}
+
+	gasPrice, err := client.SuggestGasPrice(context.Background())
+	if err != nil {
+		return nil, err
+	}
+
+	auth := bind.NewKeyedTransactor(privateKey)
+	auth.Nonce = big.NewInt(int64(nonce))
+	auth.Value = big.NewInt(0)     // in wei
+	auth.GasLimit = uint64(300000) // in units
+	auth.GasPrice = gasPrice
+
+	address := common.HexToAddress(config.ContractAddress)
+	instance, err := freg.NewFileRegistry(address, client)
+	if err != nil {
+		return nil, err
+	}
 
 	return &Contract{
-		Instance:    nil,
-		Client:      client,
-		PrivateKey:  privateKey,
-		FromAddress: fromAddress,
+		Instance: instance,
+		Auth:     auth,
 	}, nil
 }
 
-func (contract *Contract) Deploy() error {
-	nonce, err := contract.Client.PendingNonceAt(context.Background(), contract.FromAddress)
-	if err != nil {
-		return err
-	}
-
-	gasPrice, err := contract.Client.SuggestGasPrice(context.Background())
-	if err != nil {
-		return err
-	}
-
-	auth := bind.NewKeyedTransactor(contract.PrivateKey)
-	auth.Nonce = big.NewInt(int64(nonce))
-	auth.Value = big.NewInt(0)     // in wei
-	auth.GasLimit = uint64(300000) // in units
-	auth.GasPrice = gasPrice
-
-	address, tx, instance, err := store.DeployStore(auth, contract.Client)
-	if err != nil {
-		return err
-	}
-	fmt.Printf("Contract deployed at address: %s\n", address.Hex())
-	fmt.Printf("Transaction hash: %s\n", tx.Hash().Hex())
-	contract.Instance = instance
-	return nil
-}
-
 func (contract *Contract) Save(filePath string, cid string) error {
-	// Check if the contract instance is properly initialized
-	if contract.Instance == nil {
-		return fmt.Errorf("contract instance is not initialized")
-	}
-
-	nonce, err := contract.Client.PendingNonceAt(context.Background(), contract.FromAddress)
-	if err != nil {
-		return err
-	}
-
-	gasPrice, err := contract.Client.SuggestGasPrice(context.Background())
-	if err != nil {
-		return err
-	}
-
-	auth := bind.NewKeyedTransactor(contract.PrivateKey)
-	auth.Nonce = big.NewInt(int64(nonce))
-	auth.Value = big.NewInt(0)     // in wei
-	auth.GasLimit = uint64(300000) // in units
-	auth.GasPrice = gasPrice
-
-	_, err = contract.Instance.Save(auth, filePath, cid)
+	_, err := contract.Instance.Save(contract.Auth, filePath, cid)
 	return err
 }
 
 func (contract *Contract) Get(filePath string) (string, error) {
-	// Check if the contract instance is properly initialized
-	if contract.Instance == nil {
-		return "", fmt.Errorf("contract instance is not initialized")
-	}
-
 	return contract.Instance.Get(&bind.CallOpts{}, filePath)
 }
