@@ -22,32 +22,33 @@
         - Argument: filePath as queryString
         - Get the data from the File Registry and return the CID to the client.
 
-## Run on local environment
-1. Install go.
+## Run Application
+1. Install docker.
+2. Copy `backend/.env.example` and rename it to `.env`.
+3. Start docker container.
 
-2. Download required packages.
-    ``` bash
-    go mod download
+    ```bash
+    make up
     ```
-3. Install swagger.
-    ``` bash
-    go install github.com/swaggo/swag/cmd/swag@latest
-    ```
-4. Generate swagger documentation.
-    ``` bash
-    swag init -g cmd/main.go
-    ```
-5. Copy `.env.example` and rename it to `.env`.
 
-6. Run application.
-    ``` bash
-    go run ./cmd
+    If it doesn't work, use this command.
+
+    ```bash
+    docker compose up
     ```
-7. You can see swagger documentation at <http://localhost:8000/docs/index.html>.
 
-solc --abi contracts/FileRegistry.sol -o contracts
+4. Stop docker container.
 
-abigen --abi contracts/FileRegistry.abi --pkg main --type Storage --out contracts/FileRegistory.go
+    ```bash
+    make down
+    ```
+
+    If it doesn't work, use this comand
+
+    ```bash
+    docker compose down
+    ```
+
 
 ## Guidelines
 
@@ -69,17 +70,3 @@ abigen --abi contracts/FileRegistry.abi --pkg main --type Storage --out contract
 
 - Go IPFS Client
     - <https://github.com/ipfs/kubo/tree/master/client/rpchttps://github.com/ipfs/go-ipfs-api>
-
-# Sample Hardhat Project
-
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a Hardhat Ignition module that deploys that contract.
-
-Try running some of the following tasks:
-
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat ignition deploy ./ignition/modules/Lock.js
-```
