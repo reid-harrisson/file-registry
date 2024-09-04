@@ -1,2 +1,24 @@
-.env
-docs
+# Environment files
+backend/.env
+smart_contract/.env
+
+# Swagger documentation
+backend/docs
+
+# Node modules
+smart_contract/node_modules/
+
+# Hardhat files
+smart_contract/cache/
+smart_contract/artifacts/
+
+# TypeChain files
+smart_contract/typechain/
+smart_contract/typechain-types/
+
+# Solidity coverage files
+smart_contract/coverage/
+smart_contract/coverage.json
+
+# Hardhat Ignition default folder for deployments against a local node
+smart_contract/ignition/deployments/chain-31337/

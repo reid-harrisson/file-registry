@@ -1,8 +1,11 @@
-# Makefile
+# Makefile for managing Docker containers
 
-# Build the Docker image for the ML API
-docker-build:
-	docker build -t file-registry .
+# Target to start Docker containers
+# Usage: make up
+up:
+	docker compose up
 
-docker-run:
-	docker run -p 9000:8000 file-registry
+# Target to stop Docker containers
+# Usage: make down
+down:
+	docker compose down

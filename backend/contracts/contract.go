@@ -15,8 +15,10 @@ import (
 )
 
 type Contract struct {
-	Instance *freg.FileRegistry
-	Auth     *bind.TransactOpts
+	Instance    *freg.FileRegistry
+	Clinet      *ethclient.Client
+	PrivateKey  *ecdsa.PrivateKey
+	FromAddress common.Address
 }
 
 func NewContract(config *cfg.Config) (*Contract, error) {
@@ -49,8 +51,8 @@ func NewContract(config *cfg.Config) (*Contract, error) {
 
 	auth := bind.NewKeyedTransactor(privateKey)
 	auth.Nonce = big.NewInt(int64(nonce))
-	auth.Value = big.NewInt(0)     // in wei
-	auth.GasLimit = uint64(300000) // in units
+	auth.Value = big.NewInt(0)
+	auth.GasLimit = uint64(300000)
 	auth.GasPrice = gasPrice
 
 	address := common.HexToAddress(config.ContractAddress)
@@ -60,13 +62,31 @@ func NewContract(config *cfg.Config) (*Contract, error) {
 	}
 
 	return &Contract{
-		Instance: instance,
-		Auth:     auth,
+		Instance:    instance,
+		Clinet:      client,
+		PrivateKey:  privateKey,
+		FromAddress: fromAddress,
 	}, nil
 }
 
 func (contract *Contract) Save(filePath string, cid string) error {
-	_, err := contract.Instance.Save(contract.Auth, filePath, cid)
+	nonce, err := contract.Clinet.PendingNonceAt(context.Background(), contract.FromAddress)
+	if err != nil {
+		return err
+	}
+
+	gasPrice, err := contract.Clinet.SuggestGasPrice(context.Background())
+	if err != nil {
+		return err
+	}
+
+	auth := bind.NewKeyedTransactor(contract.PrivateKey)
+	auth.Nonce = big.NewInt(int64(nonce))
+	auth.Value = big.NewInt(0)
+	auth.GasLimit = uint64(300000)
+	auth.GasPrice = gasPrice
+
+	_, err = contract.Instance.Save(auth, filePath, cid)
 	return err
 }
 

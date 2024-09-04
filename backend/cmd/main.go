@@ -5,15 +5,12 @@ import (
 	s "file-registory/server"
 	"file-registory/server/routes"
 	"log"
-	"os/exec"
 )
 
 // @Title File Registry
 // @Version 1.0
 // @description This is a API for File Registry.
 func main() {
-
-	exec.Command("npx", "truffle migrate --network development")
 
 	config := cfg.NewConfig()
 

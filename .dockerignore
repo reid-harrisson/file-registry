@@ -1,6 +1,0 @@
-.env.example
-docs
-docker-compose.yaml
-Dockerfile
-Makefile
-README.md

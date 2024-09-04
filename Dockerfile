@@ -4,11 +4,11 @@ FROM golang:1.23 AS builder
 # Set destination for COPY
 WORKDIR /opt/app
 
-COPY . .
+COPY ./backend/ .
 
 # Install swag
-RUN export PATH=$(go env GOPATH)/bin:$PATH && \
-    go install github.com/swaggo/swag/cmd/swag@latest
+RUN export PATH=$(go env GOPATH)/bin:$PATH
+RUN go install github.com/swaggo/swag/cmd/swag@latest
 
 # Copy the source code.
 RUN swag init -g ./cmd/main.go
